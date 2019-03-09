@@ -111,6 +111,7 @@ void bsp_eint_key_callback(uint8_t *key_number)
 {
     uint32_t index;
     BaseType_t xHigherPriorityTaskWoken;
+    hal_gpio_data_t input_gpio_data = HAL_GPIO_DATA_LOW;
     
     index = *key_number;
 
@@ -130,6 +131,12 @@ void bsp_eint_key_callback(uint8_t *key_number)
         
         return;
     } 
+
+    if (hal_gpio_get_input(eint_key_mapping[index].gpio_port, &input_gpio_data) == HAL_GPIO_STATUS_OK) {
+		if ( (input_gpio_data == HAL_GPIO_DATA_HIGH && eint_key_context.key_sate[index] != BSP_EINT_KEY_RELEASE)
+			|| (input_gpio_data == HAL_GPIO_DATA_LOW && eint_key_context.key_sate[index] == BSP_EINT_KEY_RELEASE) )
+			return;
+	}
      
 
     if (eint_key_context.key_sate[index] == BSP_EINT_KEY_RELEASE) {
@@ -270,6 +277,7 @@ bool bsp_eint_key_register_callback(bsp_eint_key_callback_t callback, void *user
 bool bsp_eint_key_enable(void)
 {
     uint32_t i;
+    hal_gpio_data_t input_gpio_data = HAL_GPIO_DATA_LOW;
 
     for(i = 0; i<BSP_EINT_KEY_NUMBER; i++){
 #ifdef EINT_KEY_USED_EPT_CONFIGURATION
@@ -282,6 +290,12 @@ bool bsp_eint_key_enable(void)
         eint_ack_interrupt(eint_key_mapping[i].eint_number);
         hal_eint_unmask(eint_key_mapping[i].eint_number);   
 #endif
+		if (hal_gpio_get_input(eint_key_mapping[i].gpio_port, &input_gpio_data) == HAL_GPIO_STATUS_OK) {
+			if (input_gpio_data == HAL_GPIO_DATA_HIGH)
+				eint_key_context.key_sate[i] = BSP_EINT_KEY_PRESS;
+			else
+				eint_key_context.key_sate[i] = BSP_EINT_KEY_RELEASE;
+		}
     }
     
     log_hal_info("[eint_key]eint mask status = %x\r\n", *(volatile uint32_t*)0xa2030320);
