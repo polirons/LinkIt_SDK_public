@@ -36,6 +36,7 @@
 
 #ifdef HAL_GPT_MODULE_ENABLED
 #include <string.h>
+#include <math.h>
 #include "timer.h"
 #include "gpt.h"
 #include "hal_gpt.h"
@@ -72,6 +73,11 @@ static bool hal_gpt_is_port_valid(hal_gpt_port_t gpt_port)
 static uint32_t hal_gpt_translate_timeout_time(uint32_t mili_seconds)
 {
     return ((uint32_t)(mili_seconds * 32 + (7 * mili_seconds) / 10 + (6 * mili_seconds) / 100 + (8 * mili_seconds) / 1000));
+}
+
+static uint32_t hal_gpt_translate_timeout_time_f(float mili_seconds)
+{
+    return ((uint32_t)(ceil(mili_seconds*32.768f)));
 }
 
 static bool hal_gpt_translate_type(hal_gpt_timer_type_t type)
@@ -232,6 +238,30 @@ hal_gpt_status_t hal_gpt_start_timer_ms(hal_gpt_port_t gpt_port, uint32_t timeou
 
     drvTMR_init((uint32_t)gpt_port,
                 hal_gpt_translate_timeout_time(timeout_time_ms),
+                hal_gpt_translate_type(timer_type),
+                hal_gpt_map_callback(gpt_port));
+    TMR_Start((uint32_t)gpt_port);
+    g_gpt_context[gpt_port].running_status = HAL_GPT_RUNNING;
+    return HAL_GPT_STATUS_OK;
+}
+
+hal_gpt_status_t hal_gpt_start_timer_ms_f(hal_gpt_port_t gpt_port, float timeout_time_ms, hal_gpt_timer_type_t timer_type)
+{
+    if (hal_gpt_is_port_valid(gpt_port) != true) {
+        log_hal_error("Invalid port: %d. Only port 0 or 1 works as timer.", gpt_port);
+        return HAL_GPT_STATUS_ERROR_PORT;
+    }
+
+    if (g_gpt_context[gpt_port].has_initlized != true) {
+        return HAL_GPT_STATUS_ERROR;
+    }
+
+    if (timeout_time_ms > HAL_GPT_MAXIMUM_MS_TIMER_TIME) {
+        return HAL_GPT_STATUS_INVALID_PARAMETER;
+    }
+
+    drvTMR_init((uint32_t)gpt_port,
+                hal_gpt_translate_timeout_time_f(timeout_time_ms),
                 hal_gpt_translate_type(timer_type),
                 hal_gpt_map_callback(gpt_port));
     TMR_Start((uint32_t)gpt_port);
