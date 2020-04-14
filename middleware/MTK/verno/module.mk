@@ -12,7 +12,7 @@ BOARD_CONFIG ?= undefined
 CFLAGS += -I$(SOURCE_DIR)/middleware/MTK/verno/inc
 
 # Pretend the symbol is undefined, to force linking it
-LDFLAGS += -u build_date_time_str -u sw_verno_str -u hw_verno_str
+LDFLAGS += -u build_date_time_str -u sdk_verno_str -u hw_verno_str -u sw_verno_str
 
 # let "all" on top to be the default target.
 all:
@@ -35,10 +35,20 @@ $(BUILD_DIR)/middleware/MTK/verno/verno.o: $(BUILD_DIR)/middleware/MTK/verno/ver
 		echo "Build... $@ PASS" >> $(BUILD_LOG); \
 	fi;
 
+SDK_VERSION_NUMBER = $(shell cd $(SOURCE_DIR)/;git describe --abbrev=0 --tags)
+ifeq ($(SDK_VERSION_NUMBER),)
+SDK_VERSION_NUMBER = 0.0.0
+endif
+
+VERSION_NUMBER = $(shell cd $(PROJ_PATH)/../;git describe --abbrev=0 --tags)
+ifeq ($(VERSION_NUMBER),)
+VERSION_NUMBER = 0.0.0
+endif
+
 # generate verno.c based on template.
 $(BUILD_DIR)/middleware/MTK/verno/verno.c: FORCE
 	@mkdir -p $(dir $@)
-	@$(SOURCE_DIR)/middleware/MTK/verno/gen_verno.sh $(SOURCE_DIR)/middleware/MTK/verno/verno.template $@ $(MTK_FW_VERSION) $(BOARD_CONFIG)
+	@$(SOURCE_DIR)/middleware/MTK/verno/gen_verno.sh $(SOURCE_DIR)/middleware/MTK/verno/verno.template $@ $(SDK_VERSION_NUMBER) $(BOARD_CONFIG) $(VERSION_NUMBER)
 
 FORCE:
 
