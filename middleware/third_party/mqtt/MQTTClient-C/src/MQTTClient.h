@@ -22,7 +22,7 @@
 #include "MQTTMediatek.h" //Platform specific implementation header file
 
 #define MAX_PACKET_ID 65535
-#define MAX_MESSAGE_HANDLERS 5
+#define MAX_MESSAGE_HANDLERS 10
 
 enum QoS { QOS0, QOS1, QOS2 };
 
