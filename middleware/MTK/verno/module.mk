@@ -12,7 +12,7 @@ BOARD_CONFIG ?= undefined
 CFLAGS += -I$(SOURCE_DIR)/middleware/MTK/verno/inc
 
 # Pretend the symbol is undefined, to force linking it
-LDFLAGS += -u build_date_time_str -u sdk_verno_str -u hw_verno_str -u sw_verno_str
+LDFLAGS += -u build_date_time_str -u sdk_verno_str -u hw_verno_str -u sw_verno_str -u major_version_uint8 -u minor_version_uint8 -u revision_version_uint8
 
 # let "all" on top to be the default target.
 all:

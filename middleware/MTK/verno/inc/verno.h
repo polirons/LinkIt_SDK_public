@@ -35,6 +35,27 @@
 #ifndef __VERNO_H__
 #define __VERNO_H__
 
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef MTK_FW_VERSION
 #define MTK_FW_VERSION "SDK_V4.6.1"
+#endif
+
+
+extern char build_date_time_str[];
+extern char sdk_verno_str[];
+extern char hw_verno_str[];
+extern char sw_verno_str[];
+extern uint8_t major_version_uint8;
+extern uint8_t minor_version_uint8;
+extern uint8_t revision_version_uint8;
+
+#ifdef __cplusplus
+}
+#endif // extern "C"
 
 #endif

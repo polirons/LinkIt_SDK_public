@@ -27,9 +27,16 @@ if [ -z "$4" ]; then usage; exit 1; fi
 if [ -z "$5" ]; then usage; exit 1; fi
 if [ ! -z "$MTK_VERNO_DATE_TIME" ]; then date_time=$MTK_VERNO_DATE_TIME; fi
 
+major_version=$(echo $sw_verno | cut -d'.' -f 1)
+minor_version=$(echo $sw_verno | cut -d'.' -f 2)
+revision_version=$(echo $sw_verno | cut -d'.' -f 3)
+
 # replace string.
 sed  "s|\$DATE|${date_time}|g; \
       s|\$SDK_VERNO|${sdk_verno}|g; \
       s|\$HW_VERNO|${hw_verno}|g; \
-      s|\$SW_VERNO|${sw_verno}|g" $template_file > $dest_file
+      s|\$SW_VERNO|${sw_verno}|g; \
+      s|\$MAJOR_VERSION|${major_version}|g; \
+      s|\$MINOR_VERSION|${minor_version}|g; \
+      s|\$REVISION_VERSION|${revision_version}|g" $template_file > $dest_file
 
