@@ -5,7 +5,7 @@ char build_date_time_str[] = "$DATE";
 char sdk_verno_str[] = "$SDK_VERNO";
 char hw_verno_str[] = "$HW_VERNO";
 char sw_verno_str[] = "$SW_VERNO";
-uint8_t major_version_uint8 = "$MAJOR_VERSION";
-uint8_t minor_version_uint8 = "$MINOR_VERSION";
-uint8_t revision_version_uint8 = "$REVISION_VERSION";
+uint8_t major_version_uint8 = $MAJOR_VERSION;
+uint8_t minor_version_uint8 = $MINOR_VERSION;
+uint8_t revision_version_uint8 = $REVISION_VERSION;
 
