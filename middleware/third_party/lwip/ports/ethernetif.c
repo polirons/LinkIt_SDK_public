@@ -803,6 +803,14 @@ void ethernetif_init_callback(void)
     //pkt_lock_init(NULL);
 }
 
+#if LWIP_NETIF_HOSTNAME
+char* __attribute__((weak)) get_hostname(void)
+{
+    static char* hostname = "lwip";
+    return hostname;
+}
+#endif /* LWIP_NETIF_HOSTNAME */
+
 /**
  * Should be called at the beginning of the program to set up the
  * network interface. It calls the function low_level_init() to do the
@@ -830,7 +838,7 @@ ethernetif_init1(struct netif *netif)
 
 #if LWIP_NETIF_HOSTNAME
   /* Initialize interface hostname */
-  netif->hostname = "lwip";
+  netif->hostname = get_hostname();//"lwip";
 #endif /* LWIP_NETIF_HOSTNAME */
 
   /*

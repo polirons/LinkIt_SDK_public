@@ -472,6 +472,18 @@ hal_gpt_status_t hal_gpt_start_timer_ms(hal_gpt_port_t gpt_port, uint32_t timeou
 
 
 /**
+ * @brief     This function sets the expiration time in milliseconds and the timer mode, then starts the timer.
+ *            The function should only be called while the timer is stopped. An error would be returned if this function is called when the timer is running.
+ * @param[in] gpt_port is the port number.
+ * @param[in] timeout_time_ms is the expiration time in milliseconds.
+ * @param[in] timer_type is the timer mode, such as oneshot or repeat timer mode defined in #hal_gpt_timer_type_t.
+ * @return    #HAL_GPT_STATUS_OK, if the operation is successful.\n
+ *            #HAL_GPT_STATUS_ERROR_PORT, if the gpt_port value is wrong.
+ */
+hal_gpt_status_t hal_gpt_start_timer_ms_f(hal_gpt_port_t gpt_port, float timeout_time_ms, hal_gpt_timer_type_t timer_type);
+
+
+/**
  * @brief     This function sets the delay time in milliseconds.
  *            The maximum delay time = 1/GPT_clock * 0xffffffff.
  * @param[in] ms is the delay time in milliseconds.

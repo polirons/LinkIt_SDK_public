@@ -1,3 +1,6 @@
 [submodule "project/linkit7697_hdk/apps/fusion-tag"]
 	path = project/linkit7697_hdk/apps/fusion-tag
-	url = git@gitlab.com:ozgurkeles/fusion-tag.git
+	url = https://gitlab.com/polirons/fusion-tag.git
+[submodule "project/linkit7697_hdk/apps/motion"]
+	path = project/linkit7697_hdk/apps/motion
+	url = https://gitlab.com/polirons/motion.git
